@@ -1,0 +1,16 @@
+# make sure module is ready
+sudo qmicli -d /dev/cdc-wdm0 --dms-set-operating-mode='online'
+
+# configure interface for raw ip protocol
+sudo ip link set wwan0 down
+sudo echo 'Y' | tee /sys/class/net/wwan0/qmi/raw_ip
+sudo ip link set wwan0 up
+
+# connect
+sudo qmicli -p -d /dev/cdc-wdm0 --device-open-net='net-raw-ip|net-no-qos-header' --wds-start-network="apn='pinternet.interkom.de',ip-type=4" --client-no-release-cid
+
+# configure ip address and route
+sudo udhcpc -q -f -i wwan0
+
+sudo ip li set mtu 1400 dev wwan0
+# *(workaround a bug for SSH reverse tunnels)*
