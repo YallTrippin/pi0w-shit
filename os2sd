@@ -1,8 +1,8 @@
 ### IMG to SD
-sudo dd bs=4M if=xxx.IMG of=/dev/sdX conv=fsync status=progress
+sudo dd bs=4M if=*.IMG of=/dev/sda conv=fsync status=progress
 
 ### IMG.XZ to SD
-xzcat xxx.img.xz | sudo dd bs=4M of=/dev/sdX conv=fsync status=progress
+xzcat *.img.xz | sudo dd bs=4M of=/dev/sda conv=fsync status=progress
 
 ### ZIP to SD
-unzip -p xxx.zip | sudo dd of=/dev/sdX bs=4M conv=fsync status=progress
+unzip -p *.zip | sudo dd of=/dev/sda bs=4M conv=fsync status=progress
