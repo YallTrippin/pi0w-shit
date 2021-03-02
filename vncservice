@@ -1,0 +1,4 @@
+# Kali ARM VNC Server Autostart
+sudo wget -O /lib/systemd/system/vncserver@.service https://github.com/Re4son/vncservice/raw/master/vncserver@.service
+sudo systemctl enable vncserver@1.service && sudo systemctl start vncserver@1.service
+# sudo nano /lib/systemd/system/vncserver@.service
