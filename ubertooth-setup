@@ -1,0 +1,55 @@
+# deps
+sudo apt install cmake libusb-1.0-0-dev make gcc g++ libbluetooth-dev wget pkg-config python3-numpy python3-qtpy python3-distutils python3-setuptools
+cd ~
+mkdir ubertooth && cd ubertooth
+
+# libbtbb
+wget https://github.com/greatscottgadgets/libbtbb/archive/2020-12-R1.tar.gz -O libbtbb-2020-12-R1.tar.gz
+tar -xf libbtbb-2020-12-R1.tar.gz
+cd libbtbb-2020-12-R1
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
+sudo ldconfig
+
+# ubertooth tools
+cd ~/ubertooth
+wget https://github.com/greatscottgadgets/ubertooth/releases/download/2020-12-R1/ubertooth-2020-12-R1.tar.xz
+tar -xf ubertooth-2020-12-R1.tar.xz
+cd ubertooth-2020-12-R1/host
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
+sudo ldconfig
+
+# wireshark plugins
+sudo apt-get install wireshark wireshark-dev libwireshark-dev cmake
+cd ~/ubertooth/libbtbb-2020-12-R1/wireshark/plugins/btbb
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_LIBDIR=/usr/lib/aarch64-linux-gnu/wireshark/plugins/2.6 ..
+make
+sudo make install
+sudo apt-get install wireshark wireshark-dev libwireshark-dev cmake
+cd libbtbb-2020-12-R1/wireshark/plugins/btbredr
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_LIBDIR=/usr/lib/aarch64-linux-gnu/wireshark/plugins/2.6 ..
+make
+sudo make install
+
+# Kismet
+sudo apt-get install libpcap0.8-dev libcap-dev pkg-config build-essential libnl-3-dev libncurses-dev libpcre3-dev libpcap-dev libcap-dev libnl-genl-3-dev
+wget https://kismetwireless.net/code/kismet-2020-12-R3.tar.xz
+tar xf kismet-2020-12-R3.tar.xz
+cd kismet-2020-12-R3
+ln -s ~/ubertooth/ubertooth-2020-12-R1/host/kismet/plugin-ubertooth .
+./configure
+make && make plugins
+sudo make suidinstall
+sudo make plugins-install
+# Add "pcapbtbb" to the "logtypes=..." line in kismet.conf
