@@ -1,0 +1,67 @@
+# Ubertooth
+sudo apt install cmake spectools libusb-1.0-0-dev make gcc g++ libbluetooth-dev wget pkg-config python3-numpy python3-qtpy python3-distutils python3-setuptools wireshark-dev wireshark
+mkdir -p /opt/Software/ubertooth_one
+cd /opt/Software/ubertooth_one
+wget https://github.com/greatscottgadgets/libbtbb/archive/2020-12-R1.zip
+unzip 2020-12-R1.zip && rm -rf 2020-12-R1.zip
+wget https://github.com/greatscottgadgets/ubertooth/archive/2020-12-R1.zip 
+unzip 2020-12-R1.zip && rm -rf 2020-12-R1.zip
+cd libbtbb-2020-12-R1
+mkdir build && cd build
+cmake ..; make; sudo make install; sudo ldconfig
+cd /opt/Software/ubertooth_one/ubertooth-2020-12-R1/host
+mkdir build && cd build
+cmake ..; make; sudo make install; sudo ldconfig
+
+# Plugins Wireshark
+cd /opt/Software/ubertooth_one/libbtbb-2020-12-R1/wireshark/plugins/btbb
+mkdir build && cd build
+cmake -DCMAKE_INSTALL_LIBDIR=/usr/lib/aarch64-linux-gnu/wireshark/plugins/2.6 ..; make; sudo make install; sudo ldconfig
+cd /opt/Software/ubertooth_one/libbtbb-2020-12-R1/wireshark/plugins/btbredr
+mkdir build && cd build
+cmake -DCMAKE_INSTALL_LIBDIR=/usr/lib/aarch64-linux-gnu/wireshark/plugins/2.6 ..; make; sudo make install; sudo ldconfig
+
+# Crackle
+git clone --recursive https://github.com/mikeryan/crackle /opt/Software/ubertooth_one/crackle
+cd /opt/Software/ubertooth_one/crackle
+make; sudo make install; sudo ldconfig
+cd /opt/Software/ubertooth_one/
+
+# Kismet
+sudo apt-get install libpcap0.8-dev libcap-dev pkg-config build-essential libnl-3-dev libncurses-dev libpcre3-dev libpcap-dev libcap-dev libnl-genl-3-dev
+cd /opt/Software/ubertooth_one/
+wget https://github.com/kismetwireless/kismet/archive/kismet-2020-12-R3.zip
+unzip kismet-2020-12-R3.zip
+rm -rf *.zip
+cd kismet-2020-12-R3
+ln -s ../ubertooth-2020-12-R1/host/kismet/plugin-ubertooth .
+./configure
+make && make plugins
+sudo make suidinstall
+sudo make plugins-install
+# Add "pcapbtbb" to the "logtypes=..." line in kismet.conf
+# sudo nano kismet.conf
+
+# RfCat
+sudo apt install python3-serial python3-numpy python3-usb *pyside2* ipython -y
+mkdir -p /opt/Software/yardstick_one
+git clone --recursive https://github.com/atlas0fd00m/rfcat /opt/Software/yardstick_one/rfcat
+cd /opt/Software/yardstick_one/rfcat
+sudo pip3 install -r requirements.txt
+sudo python3 setup.py install
+# python3 ./rfcat -r
+
+# HackRF
+sudo apt install soapysdr-module-all gnuradio gr-osmosdr gr-gsm gqrx
+mkdir -p /opt/Software/hackrf_one
+git clone --recursive https://github.com/mossmann/hackrf /opt/Software/hackrf_one/hackrf
+cd /opt/Software/hackrf_one/hackrf
+git checkout -b h1r7
+git submodule init
+git submodule update
+cd host
+mkdir build && cd build
+cmake ..; make; sudo make install; sudo ldconfig
+cd /opt/Software/hackrf_one/hackrf/firmware
+mkdir build && cd build
+cmake ..; make; sudo make install; sudo ldconfig
