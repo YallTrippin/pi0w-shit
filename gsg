@@ -12,6 +12,7 @@ cmake ..; make; sudo make install; sudo ldconfig
 cd /opt/Software/ubertooth_one/ubertooth-2020-12-R1/host
 mkdir build && cd build
 cmake ..; make; sudo make install; sudo ldconfig
+sudo usermod -aG wireshark $USER
 
 # Plugins Wireshark
 cd /opt/Software/ubertooth_one/libbtbb-2020-12-R1/wireshark/plugins/btbb
